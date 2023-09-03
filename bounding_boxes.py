@@ -19,7 +19,6 @@ def dig(root, bound_list):
 
 
 def main():
-    # adding comments to test pre-commit
     xml_to_png_dict = {}
     input_path = "Programming-Assignment-Data"
     save_path = "outlined_images"
