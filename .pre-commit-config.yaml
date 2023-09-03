@@ -16,4 +16,3 @@ repos:
             # specify the latest version of python supported
             language_version: python3.9
             types_or: [python, pyi]
-

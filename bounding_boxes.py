@@ -2,17 +2,18 @@ import xml.etree.ElementTree as ET
 from PIL import Image, ImageDraw
 import os
 
+
 def dig(root, bound_list):
     for child in root:
         if len(list(child)) == 0:
             # bounds is a str -- let's do some parsing!
             bounds = child.get("bounds")
-            point_one_str = bounds[:bounds.index("]")+1]
-            point_two_str = bounds[bounds.index("]")+1:]
-            point_one_x = int(point_one_str[1:point_one_str.index(",")])
-            point_one_y = int(point_one_str[point_one_str.index(",")+1:-1])
-            point_two_x = int(point_two_str[1:point_two_str.index(",")])
-            point_two_y = int(point_two_str[point_two_str.index(",")+1:-1])
+            point_one_str = bounds[: bounds.index("]") + 1]
+            point_two_str = bounds[bounds.index("]") + 1 :]
+            point_one_x = int(point_one_str[1 : point_one_str.index(",")])
+            point_one_y = int(point_one_str[point_one_str.index(",") + 1 : -1])
+            point_two_x = int(point_two_str[1 : point_two_str.index(",")])
+            point_two_y = int(point_two_str[point_two_str.index(",") + 1 : -1])
             bound_list.append([(point_one_x, point_one_y), (point_two_x, point_two_y)])
         else:
             dig(child, bound_list)
@@ -47,4 +48,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
