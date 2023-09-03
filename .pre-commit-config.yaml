@@ -4,15 +4,17 @@ repos:
       hooks:
             # Add empty line to end of files
         -   id: end-of-file-fixer
-            # fix any trailing whitespace
+            # Fix any trailing whitespace
         -   id: trailing-whitespace
-            # protect certain branches from commits, "main" and "master" protected by default
+            # Protect certain branches from commits, "main" and "master" protected by default
         -   id: no-commit-to-branch
-  # add black pre-commit hook for python formatting
+            # Make sure XML files are parsable
+        -   id: check-xml
+  # Add black pre-commit hook for python formatting
   -   repo: https://github.com/psf/black-pre-commit-mirror
       rev: 22.10.0
       hooks:
         -   id: black
-            # specify the latest version of python supported
+            # Specify the latest version of python supported
             language_version: python3.9
             types_or: [python, pyi]
