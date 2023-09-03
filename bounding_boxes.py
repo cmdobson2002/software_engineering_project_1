@@ -24,7 +24,7 @@ def main():
     save_path = "outlined_images"
     if os.path.exists(save_path):
         for path in os.listdir(save_path):
-            os.remove(path)
+            os.remove(os.path.join(save_path, path))
     else:
         os.mkdir(save_path)
     for file in os.listdir(input_path):
