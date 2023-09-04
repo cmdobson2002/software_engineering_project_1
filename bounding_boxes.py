@@ -146,7 +146,14 @@ def main():
                 draw.rectangle(point, width=5, outline=(255, 255, 0))
 
             # Save the image to local output directory
-            im.save(os.path.join(save_path, png_file.split("/")[-1]))
+            image_save_path = os.path.join(save_path, png_file.split("/")[-1])
+
+            # Protect against an unsuccessful save
+            try:
+                im.save(image_save_path)
+            except Exception as E:
+                print(f"Couldn't save file at {image_save_path}. Moving to next file.")
+                continue
 
     print(f"Annotated images saved at: {save_path}")
 
