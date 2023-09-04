@@ -1,2 +1,2 @@
-Pillow~=10.0.0
-pre-commit
+Pillow~=10.0.0 # for processing images
+pre-commit # used for pre-commit file formatting. Can also be installed using brew
