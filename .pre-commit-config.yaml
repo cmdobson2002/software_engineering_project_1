@@ -1,0 +1,20 @@
+repos:
+  -   repo: https://github.com/pre-commit/pre-commit-hooks
+      rev: v2.3.0
+      hooks:
+            # Add empty line to end of files
+        -   id: end-of-file-fixer
+            # Fix any trailing whitespace
+        -   id: trailing-whitespace
+            # Protect certain branches from commits, "main" and "master" protected by default
+        -   id: no-commit-to-branch
+            # Make sure XML files are parsable
+        -   id: check-xml
+  # Add black pre-commit hook for python formatting
+  -   repo: https://github.com/psf/black-pre-commit-mirror
+      rev: 22.10.0
+      hooks:
+        -   id: black
+            # Specify the latest version of python supported
+            language_version: python3.9
+            types_or: [python, pyi]

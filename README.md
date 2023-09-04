@@ -1,5 +1,5 @@
 # Software Engineering Project 1
-This project takes in pairs of `xml` and `png` files. It parses the `xml` files and draws bounding boxes around the leaf-level elements on the corresponding UI screenshots. 
+This project takes in pairs of `xml` and `png` files. It parses the `xml` files and draws bounding boxes around the leaf-level elements on the corresponding UI screenshots.
 
 ### Steps for running project
 1. Clone this repository with `git clone [repo-link]`
