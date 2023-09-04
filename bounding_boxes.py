@@ -53,8 +53,56 @@ def dig(root: Element) -> List:
 
 def main():
 
+    # Allow users to specify what directory they've stored images in
+    input_path = (
+        input(
+            "Specify the directory holding xml/png file pairs "
+            "(Leave blank if using Programming-Assignment-Data): "
+        )
+        or "Programming-Assignment-Data"
+    )
+
+    if not os.path.exists(input_path):
+        print(f"Input path: {input_path} does not exist. Exiting.")
+        exit(0)
+
+    file_name = input(
+        "Specify filename (in form com.dropbox.android, no extension) "
+        "you would like to draw bounding boxes for (Leave blank if all): "
+    )
+
+    # Dictionary to hold mappings {xml_file : png_file}
+    xml_to_png_dict = {}
+
+    if not file_name:
+        print(f"Drawing bounding boxes for all files in {input_path}")
+        # Go through each file in the input data directory
+        for file in os.listdir(input_path):
+            name_ext = os.path.splitext(file)
+
+            # Get the file name, extension
+            file_name = name_ext[0]
+            file_ext = name_ext[1]
+
+            # If it's an XML file, add a dictionary entry mapping to the corresponding PNG
+            if file_ext == ".xml":
+                xml_path = os.path.join(input_path, f"{file_name}.xml")
+                png_path = os.path.join(input_path, f"{file_name}.png")
+                xml_to_png_dict[xml_path] = png_path
+
+    else:
+        xml_path = os.path.join(input_path, f"{file_name}.xml")
+        png_path = os.path.join(input_path, f"{file_name}.png")
+        if not os.path.exists(xml_path) or not os.path.exists(png_path):
+            print(
+                f"XML file {xml_path} or PNG file {png_path} does not exist. Exiting."
+            )
+            exit(0)
+
+        xml_to_png_dict[xml_path] = png_path
+        print(f"Drawing bounding boxes for {xml_path} only.")
+
     # Folder names for assignment data, output direectory
-    input_path = "Programming-Assignment-Data"
     save_path = "outlined_images"
 
     # Delete any existing images in the output directory
@@ -65,35 +113,17 @@ def main():
         # If the output directory doesn't exist, create it
         os.mkdir(save_path)
 
-    # Dictionary to hold mappings {xml_file : png_file}
-    xml_to_png_dict = {}
-
-    # Go through each file in the input data directory
-    for file in os.listdir(input_path):
-        name_ext = os.path.splitext(file)
-
-        # Get the file name, extension
-        file_name = name_ext[0]
-        file_ext = name_ext[1]
-
-        # If it's an XML file, add a dictionary entry mapping to the corresponding PNG
-        if file_ext == ".xml":
-            xml_to_png_dict[f"{file_name}.xml"] = f"{file_name}.png"
-
     # For each XML file in the dictionary
     for key in xml_to_png_dict:
 
-        # Build the path to the XML file
-        xml_path = os.path.join(input_path, key)
-
         # Try to load the XML file into a parser
         try:
-            xml_tree = ET.parse(xml_path)
-            print(f"Parsing xml file {xml_path}")
+            xml_tree = ET.parse(key)
+            print(f"Parsing xml file {key}")
 
         except Exception as e:
             print(e)
-            print(f"Couldn't parse XML for {xml_path}. Trying next file.")
+            print(f"Couldn't parse XML for {key}. Trying next file.")
             continue
 
         # Pass in XML root and coordinate list to function which will get all leaf-elements
@@ -102,16 +132,13 @@ def main():
         # Get the corresponding PNG file
         png_file = xml_to_png_dict[key]
 
-        # Build the path for the png image
-        image_path = os.path.join(input_path, png_file)
-
         # If our png image does not exist, move to the next file
-        if not os.path.exists(image_path):
+        if not os.path.exists(png_file):
             print("Couldn't find png file for drawing. Trying next file.")
             continue
 
         # Open the file with Pillow
-        with Image.open(image_path) as im:
+        with Image.open(png_file) as im:
             draw = ImageDraw.Draw(im)
 
             # For each bounding box, draw it on the image
@@ -119,7 +146,9 @@ def main():
                 draw.rectangle(point, width=5, outline=(255, 255, 0))
 
             # Save the image to local output directory
-            im.save(os.path.join(save_path, png_file))
+            im.save(os.path.join(save_path, png_file.split("/")[-1]))
+
+    print(f"Annotated images saved at: {save_path}")
 
 
 if __name__ == "__main__":
