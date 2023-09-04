@@ -62,10 +62,12 @@ def main():
         or "Programming-Assignment-Data"
     )
 
+    # Check if the input folder actually exists
     if not os.path.exists(input_path):
         print(f"Input path: {input_path} does not exist. Exiting.")
         exit(0)
 
+    # Allow users to specify a single file to parse
     file_name = input(
         "Specify filename (in form com.dropbox.android, no extension) "
         "you would like to draw bounding boxes for (Leave blank if all): "
@@ -74,8 +76,11 @@ def main():
     # Dictionary to hold mappings {xml_file : png_file}
     xml_to_png_dict = {}
 
+    # If users did not specify a file name, parse all files in input_path
     if not file_name:
+
         print(f"Drawing bounding boxes for all files in {input_path}")
+
         # Go through each file in the input data directory
         for file in os.listdir(input_path):
             name_ext = os.path.splitext(file)
@@ -91,6 +96,7 @@ def main():
                 xml_to_png_dict[xml_path] = png_path
 
     else:
+        # If the user did specify a single file name, make sure it exists
         xml_path = os.path.join(input_path, f"{file_name}.xml")
         png_path = os.path.join(input_path, f"{file_name}.png")
         if not os.path.exists(xml_path) or not os.path.exists(png_path):
@@ -99,6 +105,7 @@ def main():
             )
             exit(0)
 
+        # If single file pairing does exist, perform parsing for single file pair
         xml_to_png_dict[xml_path] = png_path
         print(f"Drawing bounding boxes for {xml_path} only.")
 
@@ -146,7 +153,14 @@ def main():
                 draw.rectangle(point, width=5, outline=(255, 255, 0))
 
             # Save the image to local output directory
-            im.save(os.path.join(save_path, png_file.split("/")[-1]))
+            image_save_path = os.path.join(save_path, png_file.split("/")[-1])
+
+            # Protect against an unsuccessful save
+            try:
+                im.save(image_save_path)
+            except Exception as E:
+                print(f"Couldn't save file at {image_save_path}. Moving to next file.")
+                continue
 
     print(f"Annotated images saved at: {save_path}")
 
